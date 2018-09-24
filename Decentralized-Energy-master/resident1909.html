@@ -1,0 +1,257 @@
+<html>
+<head>              
+<link rel="stylesheet"href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0-beta/css/materialize.min.css">
+<!-- Compiled and minified JavaScript -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0-beta/js/materialize.min.js"></script>
+<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.6.9/angular.min.js"></script>
+<script src="https://rawgit.com/gdi2290/angular-websocket/v1.0.9/angular-websocket.js"></script>
+<script src="https://code.jquery.com/jquery-3.3.1.min.js"></script> 
+<link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+<style>
+  select{
+      display: inline;
+  }
+     body {font-family: Arial;}
+     div#envelope{
+     width: 70%;
+     margin: 10px 30% 10px 25%;
+     padding:10px 0;
+     border: 2px solid gray;
+     height: 120%;
+     }
+   
+   </style>
+</head>
+
+<body>
+<div ng-app="myApp" ng-controller="myCtrl">
+      <div id="envelope">
+        <h4><b> ADD RESIDENT </b></h4>
+        <div>
+        <table style="width:100%">
+
+        <tr class="thead-cols">          
+            <th class="bc">ID</th>        
+            <th class="bc" >First Name</th>       
+            <th class="bc" >Last Name</th>  
+            <th class="bc">Coins Balance</th>  
+            <th class="bc">Energy Value</th>
+            <th class="bc">Energy Units</th>
+            <th class="bc">Cash Balance</th>
+            <th class="bc">Cash Currency</th>
+            <th class="bc">Actions</th>       
+      </tr>
+        
+            <tr ng-repeat="resident in Residents">
+                <td>{{resident.residentID}}</td>           
+                <td>{{resident.firstName}}</td>            
+                <td>{{resident.lastName}}</td>
+                <td>{{resident.coinsValue}}</td>
+                <td>{{resident.energyValue}}</td>
+                <td>{{resident.energyUnits}}</td>
+                <td>{{resident.cashValue}}</td>
+                <td>{{resident.cashCurrency}}</td>
+                <td><input type="button" ng-click="Remove($index)" value="Remove" /></td>
+                <td><input type="button" id="myBtn" ng-click="openUpdate($index)"value="Update" /></td>
+                <!-- <button id="myBtn">Open Modal</button> -->
+
+<!-- The Modal -->
+<div id="myModal" class="modal" >
+  <!-- Modal content -->
+  <div class="modal-content" >
+    <span class="close">&times;</span>   
+        <div class="form-group text-left">
+            <input type="text" name="residentID" id="residentIDn" placeholder="resident ID" ng-model="residentID">    
+        </div>          
+        <div class="form-group text-left">
+          <input type="text" name="firstName" id="firstNamen" placeholder="first Name" ng-model="firstNameUpdated">       
+        </div>          
+        <div class="form-group text-left">
+          <input type="text" name="lastName" id="lastNamen" placeholder="last NAME" ng-model="lastNameUpdated">
+        </div> 
+    <input type="button" ng-click="Update($index)" value="Submit" />
+  </div>
+
+
+
+      </tr>   
+      
+          <td><input type="text" id="residentID" ng-model="residentID"/></td>
+          <td><input type="text" ng-model="firstName" id="firstName" /></td>
+          <td><input type="text" ng-model="lastName" id="lastName"/></td>
+          <td><input type="text" ng-model="coinsValue" /></td>
+          <td><input type="text" ng-model="energyValue" /></td>
+          <td><select name="energyUnits" id="energyUnits" ng-model="energyUnits"> /><option value="kwh">kwh</option></select> </td>
+          <td><input type="text" ng-model="cashValue" /></td>
+          <td><select name="cashCurrency" id="cashCurrency" ng-model="cashCurrency"> /><option value="USD">USD</option></select> </td>
+          <td><input type="button" ng-click="Add()" value="Add" /></td>
+
+        </table> 
+        </div>
+        </div>
+        <div ng-show="sucess"></div>
+          Registered with transaction Id {{transactionId}}
+        </div> 
+</div>
+
+<div ng-app="myApp" ng-controller="myUpdateCtrl">
+
+
+
+</div>
+
+</body>
+<script>
+var app = angular.module('myApp', []);
+app.controller('myCtrl',['$scope','$http','$timeout',function ($scope,$http,$timeout) {
+  $scope.sucess=false
+  $scope.transactionId="";
+  
+  $scope.Add = function(){
+
+ $scope.Residents = []
+ var residentinner = {}
+ residentinner.residentID = $scope.residentID
+ residentinner.firstName = $scope.firstName
+ residentinner.lastName = $scope.lastName
+ residentinner.coinsValue = $scope.coinsValue
+ residentinner.energyValue = $scope.energyValue
+ residentinner.energyUnits = $scope.energyUnits
+ residentinner.cashValue = $scope.cashValue
+ residentinner.cashCurrency =$scope.cashCurrency
+ $scope.Residents.push(residentinner)
+ $scope.message = "Product have been created sucessfully";
+ $scope.setValue();
+ $scope.residentID="";
+ $scope.firstName="";
+ $scope.lastName="";
+ $scope.coinsValue="";
+ $scope.energyValue="";
+ $scope.energyUnits="";
+ $scope.cashValue="";
+ $scope.cashCurrency="";
+}
+ $scope.Remove = function (index) {
+     //Find the record using Index from Array.
+     var id = $scope.Residents[index].residentID;
+         $scope.Residents.splice(index, 1);
+     
+ }
+
+$scope.openUpdate = function (index)
+{
+ var modal = document.getElementById('myModal');
+// Get the button that opens the modal
+var btn = document.getElementById("myBtn");
+// Get the <span> element that closes the modal
+var span = document.getElementsByClassName("close")[0];
+// When the user clicks the button, open the modal 
+btn.onclick = function() {
+    modal.style.display = "block";
+}
+if(btn!=null){
+var residentID = $scope.Residents[index].residentID;
+btn.document.getElementById(residentIDn).value = residentID;
+
+            // var firstName = document.getElementById("firstNamen");
+            // var lastName = document.getElementById("lastNamen");
+            // var a = document.getElementById("residentID").value;
+            // residentIDn.innerHTML =document.getElementById("residentID").value;
+            // firstNamen.innerHTML = document.getElementById("firstName").value;
+            // lastNamen.innerHTML = document.getElementById("lastName").value;
+            btn.focus;
+}
+            else{
+            alert("Popup has been closed.");
+
+}
+$scope.message = "Product have been updated sucessfully";
+// When the user clicks on <span> (x), close the modal
+span.onclick = function() {
+    modal.style.display = "none";
+} 
+
+}
+
+ $scope.Update = function (index) {
+
+//var resID = $scope.Residents[index].residentID;
+$scope.Residents[index].firstName=$scope.firstnameUpdated;
+$scope.Residents[index].lastName=$scope.lastNameUpdated;
+     
+
+var request={
+  "$class": "org.decentralized.energy.network.Resident",
+  "residentID": $scope.residentID,
+  "firstName": $scope.firstnameUpdated,
+  "lastName": $scope.lastNameUpdated,
+  "coins": "resource:org.decentralized.energy.network.Coins#"+$scope.coinsValue,
+  "cash": "resource:org.decentralized.energy.network.Cash#"+$scope.cashValue,
+  "energy": "resource:org.decentralized.energy.network.Energy#"+$scope.energyValue
+} 
+     var requestInfo = Request();
+     data : requestInfo
+  var res = $http.put('http://ec2-35-173-231-185.compute-1.amazonaws.com:3000/api/Resident/'+$scope.residentID,request).then(function successCallback(response){
+           alert("Successfully added new batch");
+           $scope.update_response=response;
+           $scope.sucess=true
+           $scope.transactionId=$scope.update_response.data.transactionId
+       }, function errorCallback(response){
+           console.log("PUT-ing of data failed");
+       });
+ }
+
+
+
+
+
+$scope.setValue=function() {
+    var request={
+  "$class": "org.decentralized.energy.network.Resident",
+  "residentID": $scope.residentID,
+  "firstName": $scope.firstName,
+  "lastName": $scope.lastName,
+  "coins": "resource:org.decentralized.energy.network.Coins#"+$scope.coinsValue,
+  "cash": "resource:org.decentralized.energy.network.Cash#"+$scope.cashValue,
+  "energy": "resource:org.decentralized.energy.network.Energy#"+$scope.energyValue
+} 
+     var requestInfo = Request();
+   
+     data : requestInfo
+ 
+  var res = $http.post('http://ec2-35-173-231-185.compute-1.amazonaws.com:3000/api/Resident',request).then(function successCallback(response){
+           alert("Successfully added new batch");
+           $scope.update_response=response;
+           $scope.sucess=true
+           $scope.transactionId=$scope.update_response.data.transactionId
+       }, function errorCallback(response){
+           console.log("POST-ing of data failed");
+       });
+}
+ 
+function Request() {
+ 
+  return {
+  "$class": "org.decentralized.energy.network.Resident",
+  "residentID": "",
+  "firstName": "",
+  "lastName": "",
+  "coins": "",
+  "cash": "",
+  "energy": ""
+  }
+  };
+$scope.residentID =" "       
+$scope.firstName =" "         
+$scope.lastName =" "
+$scope.coinsValue =" "
+$scope.energyValue= " "
+$scope.energyUnits = " "
+$scope.cashValue = " "
+$scope.cashCurrency = " "
+$scope.show=false;
+}]);
+ 
+</script>
+ 
+</html>
