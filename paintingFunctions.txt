@@ -1,0 +1,16 @@
+peer chaincode instantiate -n mycc -v 0 -c '{"Args":["Shipment","1","Buyer","Seller","CurrentLocation", "DestinationCity", "OriginCity", "ShipmentCondition", "Temperature", "Humidity", "Luminosity"]}' -C myc
+
+peer chaincode invoke -n mycc -c '{"Args":["registerShipment","5","abc","xyz","NY","CA","NY","good_condition","100","22","44"]}' -C myc 
+
+peer chaincode invoke -n mycc -c '{"Args":["registerShipment","45","abc","xyz","kochi","Pune","Bangalore","good_condition","100","",""]}' -C myc
+
+peer chaincode invoke -n mycc -c '{"Args":["updateTemparature","2","100"]}' -C myc
+peer chaincode invoke -n mycc -c '{"Args":["updateShipmentStatus","2","tampered"]}' -C myc
+peer chaincode invoke -n mycc -c '{"Args":["updateHumidity","2","25"]}' -C myc
+peer chaincode invoke -n mycc -c '{"Args":["updateLuminosity","4","18"]}' -C myc
+peer chaincode invoke -n mycc -c '{"Args":["updateOriginCity","2","kochi"]}' -C myc
+ peer chaincode invoke -n mycc -c '{"Args":["updateCurrentLocation","2","Pune"]}' -C myc
+peer chaincode invoke -n mycc -c '{"Args":["updateDestinationCity","2","Banagalore"]}' -C myc
+peer chaincode query -n mycc -c '{"Args":["queryHistory","2"]}' -C myc
+peer chaincode query -n mycc -c '{"Args":["getShipmentDetails","45"]}' -C myc
+
